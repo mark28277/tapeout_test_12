@@ -39,27 +39,54 @@ module tt_um_mark28277 (
         .output_data(relu_1_out)
     );
 
-    // MaxPool2d Layer 2
-    wire [7:0] maxpool_2_out;
-    maxpool_layer maxpool_inst_2 (
+    // Conv2d Layer 2
+    wire [7:0] conv_2_out;
+    conv2d_layer conv_inst_2 (
         .clk(clk),
         .reset(reset),
         .input_data(relu_1_out),
-        .output_data(maxpool_2_out)
+        .output_data(conv_2_out)
     );
 
-    // Linear Layer 3
-    wire [7:0] linear_3_out;
-    linear_layer linear_inst_3 (
+    // ReLU Layer 3
+    wire [7:0] relu_3_out;
+    relu_layer relu_inst_3 (
         .clk(clk),
         .reset(reset),
-        .input_data(maxpool_2_out),
-        .output_data(linear_3_out)
+        .input_data(conv_2_out),
+        .output_data(relu_3_out)
+    );
+
+    // MaxPool2d Layer 4
+    wire [7:0] maxpool_4_out;
+    maxpool_layer maxpool_inst_4 (
+        .clk(clk),
+        .reset(reset),
+        .input_data(relu_3_out),
+        .output_data(maxpool_4_out)
+    );
+
+    // Conv2d Layer 5
+    wire [7:0] conv_5_out;
+    conv2d_layer conv_inst_5 (
+        .clk(clk),
+        .reset(reset),
+        .input_data(maxpool_4_out),
+        .output_data(conv_5_out)
+    );
+
+    // Linear Layer 6
+    wire [7:0] linear_6_out;
+    linear_layer linear_inst_6 (
+        .clk(clk),
+        .reset(reset),
+        .input_data(conv_5_out),
+        .output_data(linear_6_out)
     );
 
     // Final output signal
     wire [7:0] final_output;
-    assign final_output = linear_3_out;
+    assign final_output = linear_6_out;
 
     // Output interface for Tiny Tapeout limited I/O
     reg [7:0] uo_out_reg;
